@@ -18,5 +18,13 @@
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.callArgumentNames": "partial",
     "python.analysis.inlayHints.variableTypes": true,
-    "python.analysis.inlayHints.pytestParameters": true
+    "python.analysis.inlayHints.pytestParameters": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./DummyUIPython",
+        "-p",
+        "*test*.py"
+    ],
+    "python.testing.pytestEnabled": false
 }

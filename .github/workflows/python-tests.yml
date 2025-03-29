@@ -13,22 +13,31 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
     steps:
+    # Check out the code
     - uses: actions/checkout@v4
+
+    # Set up Python environment
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+
+    # Install dependencies
     - name: Install dependencies
+      working-directory: DummyUIPython
       run: pip install -r DummyUIPython/requirements.txt
+
+    # Run unit tests with coverage
     - name: Run tests with coverage
+      working-directory: DummyUIPython
       run: |
-        cd DummyUIPython.Tests
-        coverage run -m unittest discover
-        coverage report
+        coverage run -m unittest discover tests
+        coverage report --fail-under=80  # Enforce 80% coverage threshold
+
+    # Upload coverage results (optional, for integration with tools like Codecov)
     - name: Upload coverage
       run: coverage xml
