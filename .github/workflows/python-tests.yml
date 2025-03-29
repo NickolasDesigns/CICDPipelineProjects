@@ -40,4 +40,5 @@ jobs:
 
     # Upload coverage results (optional, for integration with tools like Codecov)
     - name: Upload coverage
+      working-directory: DummyUIPython
       run: coverage xml
