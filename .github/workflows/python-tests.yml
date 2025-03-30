@@ -1,4 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# This workflow will build the python environment, run tests and generate a coverage report.
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 name: Python Tests
@@ -13,25 +13,26 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  build_env:
     runs-on: windows-latest
 
     steps:
-    # Check out the code
-    - uses: actions/checkout@v4
+    - name: Check out code
+      uses: actions/checkout@v4
 
-    # Set up Python environment
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
 
-    # Install dependencies
     - name: Install dependencies
       working-directory: DummyUIPython
       run: pip install -r requirements.txt
 
-    # Run unit tests with coverage
+  run_tests:
+    needs: build_env   # Dependent on the build_env job completing successfully.
+    runs-on: windows-latest
+    steps:
     - name: Run tests with coverage
       working-directory: DummyUIPython
       run: |
@@ -42,3 +43,20 @@ jobs:
     - name: Upload coverage
       working-directory: DummyUIPython
       run: coverage xml
+
+  build:
+    needs: run_tests
+    runs-on: windows-latest
+    steps:
+      - name: Build .exe file
+        working-directory: DummyUIPython
+        run: |
+          pyinstaller --onefile app.py
+          mkdir -p package
+          mv dist/app.exe package/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: DummyUIPython/package/app.exe
