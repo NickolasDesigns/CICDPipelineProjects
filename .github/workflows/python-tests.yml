@@ -28,10 +28,6 @@ jobs:
       working-directory: DummyUIPython
       run: pip install -r requirements.txt
 
-  test_then_build:
-    needs: setup_env # Dependent on the setup_env job completing successfully.
-    runs-on: windows-latest
-    steps:
     - name: Run tests with coverage
       working-directory: DummyUIPython
       run: |
