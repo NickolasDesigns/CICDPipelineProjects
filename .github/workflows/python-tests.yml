@@ -47,7 +47,7 @@ jobs:
       run: coverage xml
 
 
-  build:
+  deploy:
     needs: [build_env, run_tests] # Specifies dependencies on both 'build_env' and 'run_tests'
     runs-on: windows-latest
     steps:
