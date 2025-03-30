@@ -13,9 +13,7 @@ permissions:
   contents: read
 
 jobs:
-
-
-  build_env:
+  setup_env:
     runs-on: windows-latest
     steps:
     - name: Check out code
@@ -30,36 +28,29 @@ jobs:
       working-directory: DummyUIPython
       run: pip install -r requirements.txt
 
-
-  run_tests:
-    needs: build_env # Dependent on the build_env job completing successfully.
+  test_then_build:
+    needs: setup_env # Dependent on the setup_env job completing successfully.
     runs-on: windows-latest
     steps:
-    - name: Run Tests with Coverage
+    - name: Run tests with coverage
       working-directory: DummyUIPython
       run: |
         coverage run -m unittest discover tests
         coverage report --fail-under=80  # Enforce 80% coverage threshold
 
-    # Upload coverage results (optional, for integration with tools like Codecov)
-    - name: Upload Coverage Results
+    - name: Upload coverage results
       working-directory: DummyUIPython
       run: coverage xml
 
+    - name: Build python application
+      working-directory: DummyUIPython
+      run: |
+        pyinstaller --onefile main.py
+        mkdir -p package
+        mv dist/main.exe package/
 
-  deploy:
-    needs: [build_env, run_tests] # Specifies dependencies on both 'build_env' and 'run_tests'
-    runs-on: windows-latest
-    steps:
-      - name: Build Python Application
-        working-directory: DummyUIPython
-        run: |
-          pyinstaller --onefile app.py
-          mkdir -p package
-          mv dist/app.exe package/
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifact
-          path: DummyUIPython/package/app.exe
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifact
+        path: DummyUIPython/package/main.exe
