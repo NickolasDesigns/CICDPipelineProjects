@@ -1,6 +1,6 @@
 """Main entry point to the application."""
 
-from src.app import App
+from src.infrastructure.app import App
 
 
 if __name__ == "__main__":

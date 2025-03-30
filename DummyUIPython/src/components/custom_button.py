@@ -7,10 +7,10 @@ from tkinter import messagebox
 class CustomButton(tk.Button):
     """Reusable UI Dialog is used to display a message."""
 
-    def __init__(self, parent: tk.Tk, button_title: str):
+    def __init__(self, parent: tk.Tk, button_title: str) -> None:
         # Tip: Make the 'command' a parameter to make this more reusable.
         super().__init__(parent, text=button_title, command=self._show_message)
         self.parent: tk.Tk = parent
 
-    def _show_message(self):
+    def _show_message(self) -> None:
         messagebox.showinfo("Button Clicked", "Hello! You clicked the button.")

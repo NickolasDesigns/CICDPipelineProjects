@@ -1,34 +1,26 @@
 """Main application source code."""
 
 import tkinter as tk
-from importlib.metadata import PackageNotFoundError, version
 
 from src.components.custom_button import CustomButton
 
 # Global Constants
 APP_NAME = "DummyUIApp"
+VERSION = "0.1.0"
 
 
 class App:
     """Demo App sets up the UI using tkinter."""
 
-    def __init__(self):
-        self.version = self._get_package_version()
+    def __init__(self) -> None:
+        self.version = VERSION
         self.root: tk.Tk = tk.Tk()
         self.root.title(APP_NAME + f"v{self.version}")
         self.root.geometry(self._build_window_geometry())
         # Create UI Components
         self._build_ui()
 
-    def _get_package_version(self):
-        try:
-            # Dynamically fetch the package version
-            return version(APP_NAME)
-        except PackageNotFoundError:
-            # Fallback if package metadata is unavailable
-            return "<ERROR GETTING VERSION>"
-
-    def _build_window_geometry(self):
+    def _build_window_geometry(self) -> str:
         # Calculate dimensions
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
@@ -44,7 +36,7 @@ class App:
         # Set the geometry of the window
         return f"{width}x{height}+{x}+{y}"
 
-    def _build_ui(self):
+    def _build_ui(self) -> None:
         # Add version label
         version_label = tk.Label(self.root, text=f"App Version: {self.version}")
         version_label.pack(pady=10)
@@ -53,6 +45,6 @@ class App:
         action_button = CustomButton(self.root, button_title="Submit Command")
         action_button.pack(pady=10)
 
-    def run(self):
+    def run(self) -> None:
         """Call the mainloop of Tk."""
         self.root.mainloop()
